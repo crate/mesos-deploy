@@ -1,0 +1,10 @@
+- name: Deploy Mesos masters to Packet.net
+  hosts: mesos-masters
+  roles:
+    - common
+    - mesos-master
+- name: Deploy Mesos slaves to Packet.net
+  hosts: mesos-slaves
+  roles:
+    - common
+    - mesos-slave

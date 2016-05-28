@@ -1,0 +1,6 @@
+- name: Install the Mesos repository
+  yum: name=http://repos.mesosphere.com/el/7/noarch/RPMS/mesosphere-el-repo-7-1.noarch.rpm state=present
+- name: Install Mesos
+  yum: name=mesos state=present
+- name: Set the Zookeeper master list
+  template: src=zk.j2 dest=/etc/mesos/zk

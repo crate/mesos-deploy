@@ -1,0 +1,34 @@
+- name: Install Marathon
+  yum: name=marathon state=present
+- name: Install Zookeeper
+  yum: name=mesosphere-zookeeper state=present
+- name: Set Zookeeper ID
+  shell: echo '{{ zookeeper_id }}' > /var/lib/zookeeper/myid
+- name: Set Mesos Master hostname
+  shell: echo '{{ ansible_host }}' > /etc/mesos-master/hostname
+- name: Set Mesos Master ip
+  shell: echo '{{ ansible_host }}' > /etc/mesos-master/ip
+- name: Configure Zookeeper
+  template: src=zoo.cfg.j2 dest=/etc/zookeeper/conf/zoo.cfg
+- name: Start Zookeeper
+  service: name=zookeeper state=started
+- name: Set the quorum
+  shell: echo '{{ (groups['mesos-masters'] | length / 2)|round|int }}' > '/etc/mesos-master/quorum'
+- name: Set the cluster name
+  shell: echo 'Crate' > /etc/mesos-master/cluster
+- name: Shutdown Mesos slave
+  service: name=mesos-slave state=stopped enabled=no
+- name: Restart Mesos Master Service
+  service: name=mesos-master state=restarted
+- name: Restart Marathon
+  service: name=marathon state=restarted
+- name: Open Zookeper Port
+  shell: firewall-cmd --zone=public --add-port=2181/tcp --permanent
+- name: Open Mesos Admin UI Port
+  shell: firewall-cmd --zone=public --add-port=5050/tcp --permanent
+- name: Open Marathon Admin UI Port
+  shell: firewall-cmd --zone=public --add-port=8080/tcp --permanent
+- name: Open Other Required Ports
+  shell: firewall-cmd --zone=public --add-port=2888-3888/tcp --permanent
+- name: Restart the firewall
+  service: name=firewalld state=restarted

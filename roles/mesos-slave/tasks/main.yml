@@ -1,0 +1,16 @@
+- name: Disable Mesos Master
+  service: name=mesos-master state=stopped enabled=false
+- name: Prepare Mesos slave for containerisation
+  shell: echo 'mesos' > /etc/mesos-slave/containerizers
+- name: Set Mesos Mesos Slave executor timeout
+  shell: echo '5mins' > /etc/mesos-slave/executor_registration_timeout
+- name: Open Mesos Admin Slave Port
+  shell: firewall-cmd --zone=public --add-port=5051/tcp --permanent
+- name: Restart the firewall
+  service: name=firewalld state=restarted
+- name: Set Mesos Slave hostname
+  shell: echo '{{ ansible_host }}' > /etc/mesos-slave/hostname
+- name: Set Mesos Slave ip
+  shell: echo '{{ ansible_host }}' > /etc/mesos-slave/ip
+- name: Restart the Mesos slave
+  service: name=mesos-slave state=restarted
