@@ -5,7 +5,7 @@
 - name: Set Mesos Mesos Slave executor timeout
   shell: echo '5mins' > /etc/mesos-slave/executor_registration_timeout
 - name: Open Mesos Admin Slave Port
-  shell: firewall-cmd --zone=public --add-port=5051,41866/tcp --permanent
+  shell: firewall-cmd --zone=public --add-port=5051/tcp --permanent
 - name: Restart the firewall
   service: name=firewalld state=restarted
 - name: Set Mesos Slave hostname
