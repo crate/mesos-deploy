@@ -8,3 +8,9 @@
   roles:
     - common
     - mesos-slave
+
+- name: Deploy Grafana hosts Packet.net
+  hosts: grafana-hosts
+  roles:
+    - common
+    - grafana-host

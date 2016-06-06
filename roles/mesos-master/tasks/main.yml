@@ -32,3 +32,4 @@
   shell: firewall-cmd --zone=public --add-port=2888-3888/tcp --permanent
 - name: Restart the firewall
   service: name=firewalld state=restarted
+ 

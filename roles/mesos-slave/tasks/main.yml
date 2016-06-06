@@ -1,11 +1,16 @@
 - name: Disable Mesos Master
   service: name=mesos-master state=stopped enabled=false
+- file: path=/opt/data state=directory mode=0777
 - name: Prepare Mesos slave for containerisation
-  shell: echo 'mesos' > /etc/mesos-slave/containerizers
+  shell: echo 'docker,mesos' > /etc/mesos-slave/containerizers
 - name: Set Mesos Mesos Slave executor timeout
   shell: echo '5mins' > /etc/mesos-slave/executor_registration_timeout
 - name: Open Mesos Admin Slave Port
   shell: firewall-cmd --zone=public --add-port=5051/tcp --permanent
+- name: Open Mesos Resource Mgmt Port I
+  shell: firewall-cmd --zone=public --add-port=31000-31099/tcp --permanent
+- name: Open Mesos Resource Mgmt Port II
+  shell: firewall-cmd --zone=public --add-port=31101-32000/tcp --permanent
 - name: Restart the firewall
   service: name=firewalld state=restarted
 - name: Set Mesos Slave hostname

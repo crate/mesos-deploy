@@ -1,5 +1,16 @@
 - name: Install the Mesos repository
   yum: name=http://repos.mesosphere.com/el/7/noarch/RPMS/mesosphere-el-repo-7-1.noarch.rpm state=present
+- name: Install the Docker repository Key
+  yum_repository:
+    name: docker-repo
+    description: A docker repo
+    baseurl: https://yum.dockerproject.org/repo/main/centos/7/
+    gpgkey: https://yum.dockerproject.org/gpg
+    gpgcheck: yes
+- name: Install Docker
+  yum: name=docker-engine state=present
+- name: Start Docker
+  service: name=docker state=started enabled=true
 - name: Install Mesos
   yum: name=mesos state=present
 - name: Set the Zookeeper master list

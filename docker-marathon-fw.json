@@ -1,0 +1,63 @@
+{
+  "id": "/crate/crate-fw",
+  "cmd": "/crate/bin/crate -Des.http.cors.enabled=true -Des.http.cors.allow-credentials=true -Des.http.cors.allow-origin=* -Des.cluster.name=packet-crate-io -Des.network.publish_host=$HOST -Des.udc.enabled=false -Des.discovery.zen.ping.multicast.enabled=false -Des.discovery.zen.ping.unicast.hosts=$HOSTS",
+  "cpus": 0.25,
+  "mem": 256,
+  "disk": 0,
+  "instances": 3,
+  "container": {
+    "type": "DOCKER",
+    "volumes": [
+      {
+        "containerPath": "/data",
+        "hostPath": "/opt/data",
+        "mode": "RW"
+      },
+      {
+        "containerPath": "/etc/mesos-slave/",
+        "hostPath": "/etc/mesos-slave/",
+        "mode": "RO"
+      }
+    ],
+    "docker": {
+      "image": "crate/crate",
+      "network": "BRIDGE",
+      "portMappings": [
+        {
+          "containerPort": 0,
+          "hostPort": 0,
+          "servicePort": 10002,
+          "protocol": "tcp",
+          "labels": {}
+        }
+      ],
+      "privileged": true,
+      "parameters": [
+        {
+          "key": "env",
+          "value": "CRATE_HEAP_SIZE=4g"
+        },
+        {
+          "key": "publish",
+          "value": "4200:4200/tcp"
+        },
+        {
+          "key": "publish",
+          "value": "4300:4300/tcp"
+        }
+      ],
+      "forcePullImage": false
+    }
+  },
+  "env": {
+    "CRATE_HEAP_SIZE": "4g",
+    "HOSTS": "147.75.205.209:4300,147.75.205.87:4300,:147.75.205.153:4300"
+  },
+  "healthChecks": [],
+  "constraints": [
+    [
+      "hostname",
+      "unique"
+    ]
+  ]
+}

@@ -1,0 +1,25 @@
+- name: Install the Grafana repository
+  yum_repository:
+    name: grafana-repo
+    description: Grafana's YUM repo
+    baseurl: https://packagecloud.io/grafana/stable/el/6/$basearch
+    gpgkey: https://packagecloud.io/gpg.key https://grafanarel.s3.amazonaws.com/RPM-GPG-KEY-grafana
+    gpgcheck: yes
+    sslverify: yes
+    sslcacert: /etc/pki/tls/certs/ca-bundle.crt
+- name: Install Grafana
+  yum: name=grafana state=present
+- name: Install Git
+  yum: name=git state=present
+- name: Check out Grafana Plugin Repository
+  git: repo=https://github.com/crate/crate-datasource.git dest=/opt/crate-datasource
+- name: Link Plugin Repository to Grafana
+  file: src=/opt/crate-datasource/dist dest=/usr/share/grafana/public/app/plugins/crate owner=grafana group=grafana state=link
+- name: Copy Grafana config
+  copy: src=roles/grafana-host/grafana.ini dest=/etc/grafana/grafana.ini owner=grafana group=grafana mode=0644
+- name: Start Grafana
+  service: name=grafana-server state=restarted enabled=true
+- name: Open Grafana Port
+  shell: firewall-cmd --zone=public --add-port=3000/tcp --permanent
+- name: Restart the firewall
+  service: name=firewalld state=restarted
