@@ -20,7 +20,7 @@
       }
     ],
     "docker": {
-      "image": "crate/crate",
+      "image": "crate/crate:latest",
       "network": "BRIDGE",
       "portMappings": [
         {
