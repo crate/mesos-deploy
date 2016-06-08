@@ -1,10 +1,16 @@
 {
   "id": "/crate/crate-fw",
-  "cmd": "/crate/bin/crate -Des.http.cors.enabled=true -Des.http.cors.allow-credentials=true -Des.http.cors.allow-origin=* -Des.cluster.name=packet-crate-io -Des.network.publish_host=$HOST -Des.udc.enabled=false -Des.discovery.zen.ping.multicast.enabled=false -Des.discovery.zen.ping.unicast.hosts=$HOSTS",
+  "cmd": "crate -Des.http.cors.enabled=true -Des.gateway.recover_after_nodes=$RECOVER_AFTER_NODES -Des.discovery.zen.minimum_master_nodes=$MIN_MASTER_NODES -Des.gateway.expected_nodes=$EXPECTED_NODES -Des.http.cors.allow-credentials=true -Des.http.cors.allow-origin=* -Des.cluster.name=packet-crate-io -Des.network.publish_host=$HOST -Des.udc.enabled=false -Des.discovery.zen.ping.multicast.enabled=false -Des.discovery.zen.ping.unicast.hosts=$HOSTS",
   "cpus": 0.25,
   "mem": 256,
   "disk": 0,
   "instances": 3,
+  "constraints": [
+    [
+      "hostname",
+      "UNIQUE"
+    ]
+  ],
   "container": {
     "type": "DOCKER",
     "volumes": [
@@ -31,7 +37,7 @@
           "labels": {}
         }
       ],
-      "privileged": true,
+      "privileged": false,
       "parameters": [
         {
           "key": "env",
@@ -46,18 +52,16 @@
           "value": "4300:4300/tcp"
         }
       ],
-      "forcePullImage": false
+      "forcePullImage": true
     }
   },
   "env": {
     "CRATE_HEAP_SIZE": "4g",
-    "HOSTS": "147.75.205.209:4300,147.75.205.87:4300,:147.75.205.153:4300"
+    "EXPECTED_NODES": "3",
+    "MIN_MASTER_NODES": "2",
+    "HOSTS": "10.80.44.153:4300,10.80.44.149:4300,10.80.44.151:4300",
+    "RECOVER_AFTER_NODES": "3"
   },
-  "healthChecks": [],
-  "constraints": [
-    [
-      "hostname",
-      "unique"
-    ]
-  ]
+  "labels": {},
+  "healthChecks": []
 }

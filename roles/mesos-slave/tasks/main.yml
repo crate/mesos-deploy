@@ -11,6 +11,8 @@
   shell: firewall-cmd --zone=trusted --add-port=31000-31099/tcp --permanent
 - name: Open Mesos Resource Mgmt Port II
   shell: firewall-cmd --zone=trusted --add-port=31101-32000/tcp --permanent
+- name: Add Docker network to trusted Zone
+  shell: firewall-cmd --permanent --zone=trusted --add-source=172.17.0.0/16
 - name: Restart the firewall
   service: name=firewalld state=restarted
 - name: Set Mesos Slave hostname
@@ -18,6 +20,6 @@
 - name: Set Mesos Slave ip
   shell: echo '{{ ansible_host }}' > /etc/mesos-slave/ip
 - name: Clear old Slave Stuff
-  file: path=/tmp/mesos/meta/slaves/latest state=absent  
+  file: path=/tmp/mesos/meta/slaves/latest state=absent
 - name: Restart the Mesos slave
   service: name=mesos-slave state=restarted
