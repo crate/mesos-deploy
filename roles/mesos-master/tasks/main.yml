@@ -23,13 +23,12 @@
 - name: Restart Marathon
   service: name=marathon state=restarted
 - name: Open Zookeper Port
-  shell: firewall-cmd --zone=public --add-port=2181/tcp --permanent
+  shell: firewall-cmd --zone=trusted --add-port=2181/tcp --permanent
 - name: Open Mesos Admin UI Port
-  shell: firewall-cmd --zone=public --add-port=5050/tcp --permanent
+  shell: firewall-cmd --zone=trusted --add-port=5050/tcp --permanent
 - name: Open Marathon Admin UI Port
-  shell: firewall-cmd --zone=public --add-port=8080/tcp --permanent
+  shell: firewall-cmd --zone=trusted --add-port=8080/tcp --permanent
 - name: Open Other Required Ports
-  shell: firewall-cmd --zone=public --add-port=2888-3888/tcp --permanent
+  shell: firewall-cmd --zone=trusted --add-port=2888-3888/tcp --permanent
 - name: Restart the firewall
   service: name=firewalld state=restarted
- 

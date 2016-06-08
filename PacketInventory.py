@@ -20,13 +20,14 @@ class PacketInventory(object):
         for host in devices:
             hostname = host['hostname']
             user = host['user']
-            ip = self._get_ip(host)
-            self.hosts.append((hostname, user, ip))
+            ip = self._get_ip(host, False)
+            private_ip = self._get_ip(host, False)
+            self.hosts.append((hostname, user, ip,  private_ip))
 
-    def _get_ip(self, host):
+    def _get_ip(self, host, is_public = True):
         retval = None
         for address in host['ip_addresses']:
-            if address['public'] == True:
+            if address['public'] == is_public:
                 retval = address['address']
                 break
         return retval
@@ -44,22 +45,22 @@ class PacketInventory(object):
         with open(file, 'w') as cfgfile:
             cfgfile.write('[mesos-masters]\n')
             for host in self._get_masters():
-                cfgfile.write("%s ansible_host=%s ansible_user=%s zookeeper_id=%s\n"
-                              % (host[0], host[2], host[1], host[0][-1]))
+                cfgfile.write("%s ansible_host=%s ansible_user=%s zookeeper_id=%s private_ip=%s\n"
+                              % (host[0], host[2], host[1], host[0][-1], host[3]))
 
             cfgfile.write('[mesos-slaves]\n')
             for host in self._get_slaves():
-                cfgfile.write("%s ansible_host=%s ansible_user=%s\n"
-                              % (host[0], host[2], host[1]))
+                cfgfile.write("%s ansible_host=%s ansible_user=%s private_ip=%s\n"
+                              % (host[0], host[2], host[1], host[3]))
 
             cfgfile.write('[grafana-hosts]\n')
             for host in self._get_grafana_hosts():
-                cfgfile.write("%s ansible_host=%s ansible_user=%s\n"
-                              % (host[0], host[2], host[1]))
+                cfgfile.write("%s ansible_host=%s ansible_user=%s private_ip=%s\n"
+                              % (host[0], host[2], host[1], host[3]))
 
     def create_zk(self, file = 'zk.j2'):
         content = "zk://%s/mesos"
-        ips = ["%s:2181" % host[2] for host in self._get_masters()]
+        ips = ["%s:2181" % host[3] for host in self._get_masters()]
         zk_string = ",".join(ips)
         with open(file, 'w') as zkfile:
             zkfile.write(content % zk_string)

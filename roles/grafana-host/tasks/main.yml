@@ -11,10 +11,14 @@
   yum: name=grafana state=present
 - name: Install Git
   yum: name=git state=present
-- name: Check out Grafana Plugin Repository
+- name: Check out Grafana CRATE Plugin Repository
   git: repo=https://github.com/crate/crate-datasource.git dest=/opt/crate-datasource
-- name: Link Plugin Repository to Grafana
-  file: src=/opt/crate-datasource/dist dest=/usr/share/grafana/public/app/plugins/crate owner=grafana group=grafana state=link
+- name: Link CRATE Plugin Repository to Grafana
+  file: src=/opt/crate-datasource/dist dest=/usr/share/grafana/public/app/plugins/crate owner=grafana
+- name: Check out the Grafana Map Plugin Repository
+  git: repo=https://github.com/grafana/worldmap-panel.git dest=/opt/worldmap-panel
+- name: Link Map Plugin Repository to Grafana
+  file: src=/opt/worldmap-panel/dist dest=/usr/share/grafana/public/app/plugins/worldmap-panel owner=grafana group=grafana state=link
 - name: Copy Grafana config
   copy: src=roles/grafana-host/grafana.ini dest=/etc/grafana/grafana.ini owner=grafana group=grafana mode=0644
 - name: Start Grafana
