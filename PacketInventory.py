@@ -20,7 +20,7 @@ class PacketInventory(object):
         for host in devices:
             hostname = host['hostname']
             user = host['user']
-            ip = self._get_ip(host, False)
+            ip = self._get_ip(host, True)
             private_ip = self._get_ip(host, False)
             self.hosts.append((hostname, user, ip,  private_ip))
 
@@ -60,7 +60,7 @@ class PacketInventory(object):
 
     def create_zk(self, file = 'zk.j2'):
         content = "zk://%s/mesos"
-        ips = ["%s:2181" % host[3] for host in self._get_masters()]
+        ips = ["%s:2181" % host[2] for host in self._get_masters()]
         zk_string = ",".join(ips)
         with open(file, 'w') as zkfile:
             zkfile.write(content % zk_string)

@@ -6,11 +6,11 @@
 - name: Set Mesos Mesos Slave executor timeout
   shell: echo '5mins' > /etc/mesos-slave/executor_registration_timeout
 - name: Open Mesos Admin Slave Port
-  shell: firewall-cmd --zone=trusted --add-port=5051/tcp --permanent
+  shell: firewall-cmd --zone=public --add-port=5051/tcp --permanent
 - name: Open Mesos Resource Mgmt Port I
-  shell: firewall-cmd --zone=trusted --add-port=31000-31099/tcp --permanent
+  shell: firewall-cmd --zone=public --add-port=31000-31099/tcp --permanent
 - name: Open Mesos Resource Mgmt Port II
-  shell: firewall-cmd --zone=trusted --add-port=31101-32000/tcp --permanent
+  shell: firewall-cmd --zone=public --add-port=31101-32000/tcp --permanent
 - name: Add Docker network to trusted Zone
   shell: firewall-cmd --permanent --zone=trusted --add-source=172.17.0.0/16
 - name: Restart the firewall
@@ -20,6 +20,6 @@
 - name: Set Mesos Slave ip
   shell: echo '{{ ansible_host }}' > /etc/mesos-slave/ip
 - name: Clear old Slave Stuff
-  file: path=/tmp/mesos/meta/slaves/latest state=absent
+  file: path=/var/lib/mesos/meta/slaves/latest state=absent
 - name: Restart the Mesos slave
   service: name=mesos-slave state=restarted
