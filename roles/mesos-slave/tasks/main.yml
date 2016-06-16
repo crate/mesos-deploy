@@ -16,7 +16,7 @@
 - name: Restart the firewall
   service: name=firewalld state=restarted
 - name: Set Mesos Slave hostname
-  shell: echo '{{ ansible_host }}' > /etc/mesos-slave/hostname
+  shell: echo '{{ ansible_hostname }}' > /etc/mesos-slave/hostname
 - name: Set Mesos Slave ip
   shell: echo '{{ ansible_host }}' > /etc/mesos-slave/ip
 - name: Clear old Slave Stuff

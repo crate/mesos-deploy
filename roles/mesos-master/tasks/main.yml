@@ -5,7 +5,7 @@
 - name: Set Zookeeper ID
   shell: echo '{{ zookeeper_id }}' > /var/lib/zookeeper/myid
 - name: Set Mesos Master hostname
-  shell: echo '{{ ansible_host }}' > /etc/mesos-master/hostname
+  shell: echo '{{ ansible_hostname }}' > /etc/mesos-master/hostname
 - name: Set Mesos Master ip
   shell: echo '{{ ansible_host }}' > /etc/mesos-master/ip
 - name: Configure Zookeeper
